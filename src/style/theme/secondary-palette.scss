@@ -1,0 +1,34 @@
+@use '../../../node_modules/@angular/material' as mat;
+@include mat.core();
+$secondary-palette: (
+	50: #f9f9f9,
+	100: #f0f0ef,
+	200: #e7e6e5,
+	300: #dddcdb,
+	400: #d5d5d3,
+	500: #cecdcb,
+	600: #c9c8c6,
+	700: #c2c1be,
+	800: #bcbab8,
+	900: #b0aeac,
+	A100: #ffffff,
+	A200: #ffffff,
+	A400: #fffefc,
+	A700: #fff4e3,
+	contrast: (
+		50: #0051ff,
+		100: #0051ff,
+		200: #0051ff,
+		300: #0051ff,
+		400: #0051ff,
+		500: #0051ff,
+		600: #0051ff,
+		700: #0051ff,
+		800: #0051ff,
+		900: #0051ff,
+		A100: #0051ff,
+		A200: #0051ff,
+		A400: #0051ff,
+		A700: #0051ff
+	)
+);

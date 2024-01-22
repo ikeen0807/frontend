@@ -1,0 +1,51 @@
+@use '../../node_modules/@angular/material' as mat;
+
+@import 'material-symbols/outlined.css';
+@import 'bootstrap';
+@import 'utilities';
+@import 'mixins';
+@import './theme/app-theme.scss';
+
+@include mat.core();
+@import 'material';
+
+:root {
+	--backdrop-bg: rgba(0, 0, 0, 0.5);
+}
+
+// Feedback color states
+.mat-danger:not([disabled]) {
+	background-color: fade-out($danger, 0.5) !important;
+}
+
+.danger {
+	background-color: fade-out($danger, 0.5);
+}
+
+.mat-warn:not([disabled]) {
+	background-color: fade-out($warning, 0.5) !important;
+	color: $dark !important;
+}
+
+.warning {
+	background-color: fade-out($warning, 0.5);
+}
+
+.mat-success:not([disabled]) {
+	background-color : fade-out($success, 0.5) !important;
+}
+
+.success {
+	background-color : fade-out($success, 0.5);
+}
+
+.app-toolbar {
+	display   : flex;
+	flex-wrap : wrap;
+	flex-grow : 1;
+	gap       : 0.5rem;
+
+	& > button {
+		padding-block : 0.5rem;
+	}
+}

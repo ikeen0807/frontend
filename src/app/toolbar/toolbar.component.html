@@ -1,0 +1,29 @@
+@if (isLoggedIn()) {
+<div class="toolbar">
+	<mat-toolbar>
+		<mat-toolbar-row>
+			<div class="toolbar-section">
+				<div class="col-auto d-none d-lg-block">
+					<a [routerLink]="['/']" class="toolbar-logo-link" [ngClass]="disabledHome() ? 'dashboard-disabled' : ''">
+						<img [src]="logo(notenverwaltungLogoPath)" class="toolbar-logo img-fluid" />
+					</a>
+				</div>
+				<div class="col-auto d-lg-none">
+					<a [routerLink]="['/']" class="toolbar-logo-link" [ngClass]="disabledHome() ? 'dashboard-disabled' : ''">
+						<img [src]="logo(notenverwaltungLogoPath)" class="toolbar-logo" />
+					</a>
+				</div>
+			</div>
+			<div class="toolbar-section">
+				<ng-container *ngIf="featureSchool">
+					<app-school-management></app-school-management>
+				</ng-container>
+        <ng-container *ngIf="featureSchoolClass">
+          <app-school-class-management></app-school-class-management>
+        </ng-container>
+				<app-toolbar-profile-menu></app-toolbar-profile-menu>
+			</div>
+		</mat-toolbar-row>
+	</mat-toolbar>
+</div>
+}

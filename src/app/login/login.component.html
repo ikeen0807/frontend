@@ -1,0 +1,80 @@
+@if(isLoggedIn === false) {
+<div class="login-container">
+  @if(isLoggedIn === false) {
+	<mat-card appearance="outlined" class="login-card">
+		<mat-card-header class="login-card-header">
+      <img [src]="logo('notenverwaltung-logo.png')" class="notenverwaltung-icon" />
+		</mat-card-header>
+		<mat-card-content class="p-0">
+			<form [formGroup]="loginForm">
+				<div>
+					<mat-form-field appearance="outline" class="login-form-field" MatInput>
+						<mat-label>Username</mat-label>
+						<input #inputUser
+							id="username-input"
+							autocomplete="off"
+              class="username-input"
+							formControlName="username"
+							matInput name="username"
+							placeholder="Username"
+							data-cy="login-username"
+							required
+						/>
+            <mat-icon matPrefix fontSet="material-symbols-outlined" >person</mat-icon>
+            @if(!userValid()) {
+						<mat-error> Nutzername ist ein Pflichtfeld! </mat-error>
+          }
+					</mat-form-field>
+				</div>
+				<div>
+					<mat-form-field appearance="outline" class="login-form-field">
+						<mat-label>Passwort</mat-label>
+						<input
+							autocomplete="off"
+							id="password-input"
+							formControlName="password"
+							[type]="hidePassword ? 'password' : 'text'"
+							name="password"
+							matInput
+							placeholder="Passwort"
+							data-cy="login-password"
+							required
+						/>
+            <mat-icon matPrefix fontSet="material-symbols-outlined" >lock</mat-icon>
+						<button
+							id="hide-password-button"
+							(click)="hidePassword = !hidePassword"
+							mat-icon-button
+							matSuffix
+							type="button"
+							[attr.aria-label]="'Hide password'"
+							[attr.aria-pressed]="hidePassword"
+							data-cy="login-hide-password"
+						>
+            <mat-icon fontSet="material-symbols-outlined">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+						</button>
+            @if(!passwordValid()) {
+						<mat-error> Passwort ist ein Pflichtfeld </mat-error>
+            }
+					</mat-form-field>
+				</div>
+				<div>
+					<button #submitLogin
+						id="login-button"
+						class="submit-button align-center"
+						color="primary"
+            [disabled]="!loginForm.valid"
+						mat-raised-button
+						type="submit"
+						(click)="login()"
+						data-cy="login-submit"
+					>
+						{{'Login'}}
+					</button>
+				</div>
+			</form>
+		</mat-card-content>
+	</mat-card>
+}
+</div>
+}

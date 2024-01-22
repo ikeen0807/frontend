@@ -1,0 +1,40 @@
+<div [ngClass]="containerClass" class="dialog-container" mat-dialog-container>
+  @if(headline) {
+	<h1 class="dialog-title" mat-dialog-title>{{ headline }}</h1>
+}
+	<mat-dialog-content class="text mat-typography">
+		@if(text) {
+    <p class="dialog-text">{{ text }}</p>
+  }
+		<ng-container *ngTemplateOutlet="content"></ng-container>
+	</mat-dialog-content>
+
+	<mat-dialog-actions class="dialog-actions">
+    @if(cancelButtonText) {
+		<button
+			class="cancel-btn"
+			(click)="closeDialog(false)"
+			[mat-dialog-close]="false"
+			color="accent"
+			mat-raised-button
+			data-cy="base-dialog-cancel"
+		>
+			{{ cancelButtonText }}
+		</button>
+  }
+
+  @if(!cancelOnly) {
+		<button
+			id="dialog-confirm-button"
+			class="confirm-btn"
+			(click)="closeDialog(true)"
+			[mat-dialog-close]="true"
+			color="accent"
+			mat-raised-button
+			data-cy="base-dialog-confirm"
+		>
+			Okay
+		</button>
+}
+	</mat-dialog-actions>
+</div>

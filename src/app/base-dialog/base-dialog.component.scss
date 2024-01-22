@@ -1,0 +1,27 @@
+.dialog-container {
+	padding: 1rem;
+}
+
+mat-dialog-content {
+	display: flex;
+	justify-content: center;
+}
+
+.dialog-title {
+	text-align: center;
+	font-size: 2rem;
+}
+
+.dialog-body {
+	text-align: center;
+	padding: 1.5rem;
+	font-size: 1.75rem;
+}
+
+.dialog-actions {
+	justify-content: center;
+	& > button {
+		padding-block: 1rem;
+		font-size: 1.25rem;
+	}
+}

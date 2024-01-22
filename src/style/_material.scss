@@ -1,0 +1,41 @@
+.mat-mdc-button.mat-mdc-button-base,
+.mat-mdc-raised-button.mat-mdc-button-base,
+.mat-mdc-unelevated-button.mat-mdc-button-base,
+.mat-mdc-outlined-button.mat-mdc-button-base {
+  height : auto;
+}
+
+.mdc-button__label {
+  display     : flex;
+  align-items : center;
+  height      : auto;
+}
+
+// Form field
+// https://material.angular.io/components/form-field/overview
+
+.mat-mdc-form-field {
+  &.no-focus {
+    .mdc-text-field {
+      padding : 0;
+    }
+
+    .mat-mdc-form-field-hint-wrapper,
+    .mat-mdc-form-field-error-wrapper {
+      padding-inline : 0;
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      display : none !important;
+    }
+  }
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color : transparent;
+}
+
+.mat-mdc-form-field-error {
+  width     : 25vw;
+  font-size : 12px;
+}

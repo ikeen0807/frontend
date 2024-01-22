@@ -1,0 +1,12 @@
+<button mat-button class="dropdown-menu-button" [matMenuTriggerFor]="menu">
+	<span>{{fullName}}</span>
+	<mat-icon fontSet="material-symbols-outlined" class="header-profile-menu-mat-icon" [inline]="true">arrow_drop_down</mat-icon>
+</button>
+
+<mat-menu #menu="matMenu" [overlapTrigger]="false">
+	<span mat-menu-item><mat-icon fontSet="material-symbols-outlined">tag</mat-icon> Version: 1.0</span>
+	<button (click)="logout()" mat-menu-item>
+		<mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
+		Ausloggen
+	</button>
+</mat-menu>

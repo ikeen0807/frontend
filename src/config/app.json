@@ -1,0 +1,13 @@
+{
+	"refreshTimerX": 3000,
+	"featureSchoolManagement": true,
+  "featureSchoolClassManagement": true,
+	"defaultLogout": "soft",
+	"defaultLanguage": "de",
+	"languages": {
+		"de-DE": "de",
+		"fr-FR": "fr",
+		"en-US": "en",
+		"en-GB": "en"
+	}
+}

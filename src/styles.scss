@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'style/main.scss';
+html,
+body {
+	height: 100%;
+	overflow : hidden;
+}
+
+body {
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// for force login cards
+// .cdk-overlay-backdrop {
+// 	background-color: var(--backdrop-bg, #{$backdrop-bg});
+// }
+
+.dark-backdrop {
+	--backdrop-bg: rgba(0, 0, 0, 0.6);
+}
+
+.btn-lg {
+	padding-top: 0.75rem !important;
+	padding-bottom: 0.75rem !important;
+	font-size: 1.125rem !important;
+}
+
+.cdk-overlay-pane.error {
+	& > .mat-mdc-dialog-container {
+		border: 2px solid $danger;
+		background-color: lighten($danger, 20%);
+	}
+}

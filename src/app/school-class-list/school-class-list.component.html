@@ -1,0 +1,43 @@
+<div class="school-class-list">
+  <h2>Klassenliste</h2>
+  <button (click)="openCreateClassForm()" class="create-class-btn">Klasse anlegen</button>
+  @if(showCreateClassForm) {
+  <div>
+    <form [formGroup]="createClassForm" (ngSubmit)="createClass()">
+      <input formControlName="name" placeholder="Name" required>
+      <input formControlName="is_active" type="checkbox"> Aktiv
+      <input formControlName="year" placeholder="Jahr" required>
+      <input type="number" formControlName="school_id" placeholder="Schul-ID" required>
+      <input type="number" formControlName="teacher_id" placeholder="Lehrer-ID" required>
+      <button type="submit">Klasse erstellen</button>
+    </form>
+  </div>
+}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Aktiv</th>
+        <th>Jahr</th>
+        <th>Schul-ID</th>
+        <th>Lehrer-ID</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let class of classes">
+        <td>{{ class.ID }}</td>
+        <td>{{ class.name }}</td>
+        <td>{{ class.is_active ? 'Ja' : 'Nein' }}</td>
+        <td>{{ class.year }}</td>
+        <td>{{ class.school_id }}</td>
+        <td>{{ class.teacher_id }}</td>
+        <td>
+          <button (click)="editClass(class)">Bearbeiten</button>
+          <button (click)="deleteClass(class.ID)">Löschen</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

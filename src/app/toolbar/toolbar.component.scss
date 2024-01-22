@@ -1,0 +1,53 @@
+.toolbar {
+	--toolbar-height: 3rem;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+}
+
+mat-toolbar {
+	background: linear-gradient(to top, #7e8dff, #7e8dff);
+	color: white;
+}
+
+mat-toolbar-row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.toolbar-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.toolbar-logo-link {
+	display: inline-block;
+	cursor: pointer;
+}
+
+.dashboard-disabled {
+	pointer-events: none;
+}
+
+.toolbar-logo {
+	max-width: 9rem;
+	max-height: calc(0.75 * var(--toolbar-height));
+	margin-left: 0.5rem;
+	margin-bottom: 0.25rem;
+}
+
+.header-menu-label {
+	margin: 0.5rem 0.25rem 0;
+	font-size: 1rem;
+}
+
+.header-menu-form-field {
+	margin: 0.5rem 0.25rem 0;
+	font-size: 1rem;
+}
+
+p {
+	margin: 0;
+	padding: 0;
+}
