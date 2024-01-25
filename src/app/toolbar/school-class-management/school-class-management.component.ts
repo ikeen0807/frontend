@@ -34,22 +34,29 @@ export class schoolClassManagementComponent implements OnInit {
   ngOnInit() {
 
     // Mock-Werte für die Filterung
-    const mockTeacherId = 2;
-    const mockSchoolId = 1;
+    const mockTeacherId = this.storage.getSessionEntry('teacher_id'); /// 2
+    const mockSchoolId = this.storage.getSessionEntry('school_id'); /// 3
+
+    this.schoolClass = this.storage.getLocalEntry('schoolClass');
+    this.schoolClassList = this.storage.getSessionEntry('schoolClassList');
 
     if (this.storage.getSessionEntry('user')) {
+
       if(this.storage.getSessionEntry('is_admin') === true) {
+
         this.schoolClassService.getAllSchoolClasses().subscribe((schoolClasses) => {
+
           if (schoolClasses && Array.isArray(schoolClasses)) {
+
             this.schoolClassList = schoolClasses.map(schoolClass => schoolClass.name);
+
             this.storage.setSessionEntry('schoolClassList', this.schoolClassList);
+
             if (!this.schoolClassList.includes(this.storage.getLocalEntry('schoolClass'))) {
+
               this.storage.deleteLocalEntry('schoolClass');
               this.openSchoolClassSelector();
             }
-          } else {
-            console.error('Unerwartete Antwortstruktur:', schoolClasses);
-            // Geeignete Fehlerbehandlung
           }
         });
       }
@@ -58,13 +65,14 @@ export class schoolClassManagementComponent implements OnInit {
           if (classes && Array.isArray(classes)) {
             // Filtern Sie Klassen basierend auf teacher_id und school_id
             const filteredClasses = classes.filter(schoolClass =>
-              schoolClass.teacher_id === mockTeacherId && schoolClass.school_id === mockSchoolId);
+              schoolClass.teacher_id === mockTeacherId);
 
             // Extrahieren Sie nun die Namen der gefilterten Klassen
             this.schoolClassList = filteredClasses.map(schoolClass => schoolClass.name);
+            console.log(this.schoolClass);
             this.storage.setSessionEntry('schoolClassList', this.schoolClassList);
 
-            if (!this.schoolClassList.includes(this.storage.getSessionEntry('schoolClass'))) {
+            if (!this.schoolClassList.includes(this.storage.getLocalEntry('schoolClass'))) {
               this.storage.deleteSessionEntry('schoolClass');
               this.openSchoolClassSelector();
             }
@@ -77,7 +85,7 @@ export class schoolClassManagementComponent implements OnInit {
 
 		}
 		this.event.schoolClassChange$.subscribe((schoolClass) => {
-			this.storage.setSessionEntry('schoolClass', schoolClass);
+			this.storage.setLocalEntry('schoolClass', schoolClass);
 		});
 	}
 
@@ -105,7 +113,6 @@ export class schoolClassManagementComponent implements OnInit {
 		this.schoolClass = schoolClass.value;
 		this.event.schoolClassChange$.next(schoolClass.value);
 		this.event.resetForm$.next();
-    this.storage.setSessionEntry('schoolClass', schoolClass.value);
 	}
 
 	public hasSchoolClass(): boolean {

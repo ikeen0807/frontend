@@ -4,8 +4,8 @@
 		<mat-toolbar-row>
 			<div class="toolbar-section">
 				<div class="col-auto d-none d-lg-block">
-					<a [routerLink]="['/']" class="toolbar-logo-link" [ngClass]="disabledHome() ? 'dashboard-disabled' : ''">
-						<img [src]="logo(notenverwaltungLogoPath)" class="toolbar-logo img-fluid" />
+					<a (click)="redirectToHome()" class="toolbar-logo-link" [ngClass]="disabledHome() ? 'dashboard-disabled' : ''">
+						<img (click)="redirectToHome()" [src]="logo(notenverwaltungLogoPath)" class="toolbar-logo img-fluid" />
 					</a>
 				</div>
 				<div class="col-auto d-lg-none">

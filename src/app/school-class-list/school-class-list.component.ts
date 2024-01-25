@@ -4,6 +4,7 @@ import { SchoolClassService } from '../services/school-class.service';
 import { ClassListData } from '../interfaces/class-list-data.interface';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { StorageService } from '../services/storage.service';
 
 
 @Component({
@@ -16,9 +17,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class SchoolClassListComponent implements OnInit {
   classes: Array<ClassListData> = [];
   createClassForm: FormGroup;
+  editingClass: ClassListData | null = null;
   showCreateClassForm: boolean = false;
 
-  constructor(private schoolClassService: SchoolClassService, private fb: FormBuilder) {
+  constructor(private schoolClassService: SchoolClassService, private fb: FormBuilder, private storage: StorageService) {
     this.createClassForm = this.fb.group({
       name: ['', Validators.required],
       is_active: [false],
@@ -29,13 +31,39 @@ export class SchoolClassListComponent implements OnInit {
    }
 
   ngOnInit() {
+    if(this.storage.getSessionEntry('is_admin') === true) {
     this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
       this.classes = classesArray;
     });
+    } else {
+      this.schoolClassService.getAllSchoolClassesArrayById(this.storage.getSessionEntry('school_id')).subscribe((classesArray) =>{
+        this.classes = classesArray;
+      })
+    }
   }
 
   openCreateClassForm() {
+    this.editingClass = null;
     this.showCreateClassForm = true;
+    this.createClassForm.reset({
+      name: '',
+      is_active: false,
+      year: '',
+      school_id: '',
+      teacher_id: ''
+    });
+  }
+
+  editClass(classData: ClassListData) {
+    this.showCreateClassForm = true;
+    this.editingClass = classData;
+    this.createClassForm.setValue({
+      name: classData.name,
+      is_active: classData.is_active,
+      year: classData.year,
+      school_id: classData.school_id,
+      teacher_id: classData.teacher_id
+    });
   }
 
   numberValidator(control: FormControl): {[key: string]: any} | null {
@@ -44,26 +72,59 @@ export class SchoolClassListComponent implements OnInit {
   }
 
   createClass() {
+    const isAdmin = this.storage.getSessionEntry('is_admin');
+    const schoolId = this.storage.getSessionEntry('school_id');
     if (this.createClassForm?.valid) {
-      console.log('Neue Klasse:', this.createClassForm.value);
-      this.schoolClassService.createSchoolClass(this.createClassForm.value).subscribe(() => {
-        this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
-          this.classes = classesArray;
+      if (this.editingClass) {
+        // Bearbeitungslogik
+        console.log('Klasse aktualisieren:', this.createClassForm.value);
+        this.schoolClassService.editSchoolClass(this.editingClass.ID, this.createClassForm.value).subscribe(() => {
+          if(isAdmin === true) {
+          this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
+            this.classes = classesArray;
+          });
+        }
+          if(isAdmin === false) {
+            this.schoolClassService.getAllSchoolClassesArrayById(schoolId).subscribe((classesArray) => {
+              this.classes = classesArray;
+            });
+          }
         });
-      });
-      // Zum Beispiel: this.schoolClassService.createClass(this.createClassForm.value).subscribe(...);
+      } else {
+        // Erstellungslogik
+        console.log('Neue Klasse:', this.createClassForm.value);
+        this.schoolClassService.createSchoolClass(this.createClassForm.value).subscribe(() => {
+          if(isAdmin === true) {
+            this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
+              this.classes = classesArray;
+            });
+          }
+            if(isAdmin === false) {
+              this.schoolClassService.getAllSchoolClassesArrayById(schoolId).subscribe((classesArray) => {
+                this.classes = classesArray;
+              });
+            }
+        });
+      }
       this.showCreateClassForm = false;
-      // Aktualisieren Sie ggf. die Klassenliste
     }
   }
 
-  editClass(classData: ClassListData) {
-    console.log('Bearbeiten:', classData);
-    // Implementieren Sie die Bearbeitungslogik
-  }
 
   deleteClass(classId: number) {
-    console.log('Löschen:', classId);
-    // Implementieren Sie die Löschlogik
+    const isAdmin = this.storage.getSessionEntry('is_admin');
+    const schoolId = this.storage.getSessionEntry('school_id');
+    this.schoolClassService.deleteSchoolClass(classId).subscribe(() => {
+      if(isAdmin === true) {
+        this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
+          this.classes = classesArray;
+        });
+      }
+        if(isAdmin === false) {
+          this.schoolClassService.getAllSchoolClassesArrayById(schoolId).subscribe((classesArray) => {
+            this.classes = classesArray;
+          });
+        }
+    })
   }
 }

@@ -1,0 +1,41 @@
+<div class="exam-list">
+  <h2>Klausurenliste</h2>
+  <button (click)="openCreateExamForm()" class="create-exam-btn">Klausur anlegen</button>
+  @if(showCreateExamForm) {
+  <div>
+    <form [formGroup]="createExamForm" (ngSubmit)="createExam()">
+      <input formControlName="name" placeholder="Testname" required>
+      <input type="date" formControlName="date" placeholder="Datum" required>
+      <input type="number" formControlName="max_points" placeholder="Max. Punkte" required>
+      <input type="text" formControlName="description" placeholder="Beschreibung" required>
+      <input type="number" formControlName="exam_type_id" placeholder="Testart" required>
+
+      <button type="submit">{{ editingExam ? 'Test aktualisieren' : 'Test erstellen' }}</button>
+    </form>
+  </div>
+}
+  <table>
+    <thead>
+      <tr>
+        <th>Testname</th>
+        <th>Datum</th>
+        <th>Max. Punkte</th>
+        <th>Beschreibung</th>
+        <th>Testart</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let exam of exams">
+        <td>{{ exam.name }}</td>
+        <td>{{ exam.date }}</td>
+        <td>{{ exam.max_points }} </td>
+        <td>{{ exam.description }}</td>
+        <td>{{ exam.exam_type_id }}</td>
+        <td>
+          <button (click)="editExam(exam)">Bearbeiten</button>
+          <button (click)="deleteExam(exam.ID)">Löschen</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

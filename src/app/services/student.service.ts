@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 import { StorageService } from './storage.service';
 import { SchoolStudentData } from '../interfaces/school-student-data.interface';
+import { CreateStudentDTO } from '../model/createStudentDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,23 @@ export class StudentService {
     return new HttpHeaders({
       'Authorization': 'Basic ' + baseCredentials
     });
+  }
+
+  createStudent(studentBody: CreateStudentDTO): Observable<any> {
+    const headers = this.getAuthorizationHeader();
+    return this.http.post(this.getAllStudentsUrl, studentBody, {headers: headers});
+  }
+
+  editStudent(studentId: number, studentBody: CreateStudentDTO): Observable<any> {
+    const headers = this.getAuthorizationHeader();
+    const url = `${this.getAllStudentsUrl}/${studentId}`;
+    return this.http.put(url, studentBody, {headers: headers});
+  }
+
+  deleteStudent(studentId: number) {
+    const headers = this.getAuthorizationHeader();
+    const url = `${this.getAllStudentsUrl}/${studentId}`;
+    return this.http.delete(url, {headers: headers});
   }
 
   getAllStudents(): Observable<SchoolStudentData[]> {

@@ -36,6 +36,10 @@ export class ToolbarComponent implements OnInit {
     this.featureSchoolClass = this.config.hasSchoolClassManagement();
 	}
 
+  redirectToHome() {
+    this.router.navigate(['/home'])
+  }
+
 	public isLoggedIn(): unknown {
 		const isLoggedIn = this.storage.getSessionEntry('isLoggedIn');
 		return isLoggedIn;

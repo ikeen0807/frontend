@@ -72,8 +72,10 @@ public logo(filename: string): string {
 public login(): void {
   this.service.login(this.loginForm.value).subscribe((data) => {
     if(data) {
-      let user = { fullName: data.vorname + '' + data.nachname }
+      let user = { fullName: data.vorname + ' ' + data.nachname }
       this.isLoggedIn = true;
+      this.storage.setSessionEntry('school_id', data.school_id);
+      this.storage.setSessionEntry('teacher_id', data.ID);
       this.storage.setSessionEntry('isLoggedIn', this.isLoggedIn);
       this.storage.setSessionEntry('user', user)
       this.router.navigate(['home']);

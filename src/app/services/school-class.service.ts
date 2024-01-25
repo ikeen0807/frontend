@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GetClassListResponseDTO } from '../model/getClassesListResponseDTO';
-import { AuthService } from './auth.service';
 import { StorageService } from './storage.service';
 import { ClassListData } from '../interfaces/class-list-data.interface';
 import { createSchoolClassDTO } from '../model/createSchoolClassDTO';
@@ -33,15 +32,33 @@ export class SchoolClassService {
 
   getAllSchoolClassesArray(): Observable<ClassListData[]> {
     const headers = this.getAuthorizationHeader();
-
     if (headers) {
       return this.http.get<ClassListData[]>(this.SchoolClassesUrl, { headers });
     } else {
       return this.http.get<ClassListData[]>(this.SchoolClassesUrl);
     }
   }
+  getAllSchoolClassesArrayById(schoolId: number): Observable<ClassListData[]> {
+    const headers = this.getAuthorizationHeader();
+    const url = `${this.SchoolClassesUrl}/schools/${schoolId}`;
+    if(headers) {
+      return this.http.get<ClassListData[]>(url, {headers: headers});
+    } else {
+      return this.http.get<ClassListData[]>(url);
+    }
+  }
   createSchoolClass(schoolClassBody: createSchoolClassDTO): Observable<any> {
     const headers = this.getAuthorizationHeader();
     return this.http.post(this.SchoolClassesUrl, schoolClassBody, {headers});
+  }
+  editSchoolClass(schoolClassId: number, schoolClassBody: createSchoolClassDTO): Observable<any> {
+    const headers = this.getAuthorizationHeader();
+    const url = `${this.SchoolClassesUrl}/${schoolClassId}`
+    return this.http.put(url, schoolClassBody, { headers });
+  }
+  deleteSchoolClass(schoolClassId: number) {
+    const headers = this.getAuthorizationHeader();
+    const url = `${this.SchoolClassesUrl}/${schoolClassId}`
+    return this.http.delete(url, {headers: headers});
   }
 }

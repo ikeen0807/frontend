@@ -1,5 +1,23 @@
 <div class="school-class-list">
   <h2>Klassenliste</h2>
+  <button (click)="openCreateStudentForm()" class="create-student-btn">Schüler anlegen</button>
+  @if(showCreateStudentForm) {
+  <div>
+    <form [formGroup]="createStudentForm" (ngSubmit)="createStudent()">
+      <input formControlName="vorname" placeholder="Vorname" required>
+      <input formControlName="nachname" placeholder="Nachname" required>
+      <input formControlName="date_of_birth" placeholder="Geburtstag" required>
+      <input type="number" formControlName="class_id" placeholder="Klassen-ID" required>
+      <div formGroupName="address">
+        <input formControlName="street" placeholder="Straße" required>
+        <input formControlName="number" placeholder="Hausnummer" required>
+        <input formControlName="postal" placeholder="Postleitzahl" required>
+        <input formControlName="city" placeholder="Stadt" required>
+      </div>
+      <button type="submit">{{ editingStudent ? 'Schüler aktualisieren' : 'Schüler erstellen' }}</button>
+    </form>
+  </div>
+}
   <table>
     <thead>
       <tr>
@@ -16,13 +34,13 @@
       <tr *ngFor="let student of students">
         <td>{{ student.ID }}</td>
         <td>{{ student.nachname }} {{student.vorname}}</td>
-        <td>{{student.address.postal}} {{ student.address.city}}, {{student.address.street}} {{student.address.number}}</td>
+        <td>{{ student.address.postal }} {{ student.address.city}}, {{student.address.street}} {{student.address.number}}</td>
         <td>{{ student.date_of_birth }}</td>
         <td>{{ student.class_id }}</td>
         <td>{{ student.CreatedAt }}</td>
         <td>
-          <button (click)="editClass(student)">Bearbeiten</button>
-          <button (click)="deleteClass(student.ID)">Löschen</button>
+          <button (click)="editStudent(student)">Bearbeiten</button>
+          <button (click)="deleteStudent(student.ID)">Löschen</button>
         </td>
       </tr>
     </tbody>

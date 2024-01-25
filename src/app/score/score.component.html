@@ -1,0 +1,41 @@
+<div class="score-list">
+  <h2>Benotungen</h2>
+  <button (click)="openCreateScoreForm()" class="create-score-btn">Benotung vornehmen</button>
+  @if(showCreateScoreForm) {
+  <div>
+    <form [formGroup]="createScoreForm" (ngSubmit)="createScore()">
+      <input type="number" formControlName="points" placeholder="Punkte" required>
+      <input type="text" formControlName="comment" placeholder="Kommentar" required>
+      <input type="number" formControlName="grade_id" placeholder="Note" required>
+      <input type="number" formControlName="exam_id" placeholder="Klausur" required>
+      <input type="number" formControlName="student_id" placeholder="Schüler" required>
+
+      <button type="submit">{{ editingScore ? 'Benotung aktualisieren' : 'Benotung übermitteln' }}</button>
+    </form>
+  </div>
+}
+  <table>
+    <thead>
+      <tr>
+        <th>Punkte</th>
+        <th>Kommentar</th>
+        <th>Note</th>
+        <th>Klausur</th>
+        <th>Schüler</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let score of scores">
+        <td>{{ score.points }}</td>
+        <td>{{ score.comment }}</td>
+        <td>{{ score.grade_id }} </td>
+        <td>{{ score.exam_id }}</td>
+        <td>{{ score.student_id }}</td>
+        <td>
+          <button (click)="editScore(score)">Bearbeiten</button>
+          <button (click)="deleteScore(score.ID)">Löschen</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -17,5 +17,10 @@ export class HomeComponent {
   redirectToStudentList() {
     this.router.navigate(['/studentList']);
   }
-
+  redirectToExamList() {
+    this.router.navigate(['/exams']);
+  }
+  redirectToScoreList() {
+    this.router.navigate(['/scores']);
+  }
 }

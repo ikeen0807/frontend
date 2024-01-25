@@ -34,17 +34,21 @@ export class SchoolManagementComponent implements OnInit {
   ngOnInit() {
 
     // Mock-Werte für die Filterung
-    const mockTeacherId = 2;
-    const mockSchoolId = 3;
+    const mockTeacherId = this.storage.getSessionEntry('teacher_id');
+    const mockSchoolId = this.storage.getSessionEntry('school_id');
+
+    this.school = this.storage.getLocalEntry('school');
+    this.schoolList = this.storage.getSessionEntry('schoolList');
 
     if (this.storage.getSessionEntry('user')) {
+
       if(this.storage.getSessionEntry('is_admin') === true) {
         this.schoolService.getAllSchools().subscribe((schools) => {
           if (schools && Array.isArray(schools)) {
             this.schoolList = schools.map(school => school.name);
             this.storage.setSessionEntry('schoolList', this.schoolList);
-            if (!this.schoolList.includes(this.storage.getSessionEntry('school'))) {
-              this.storage.deleteSessionEntry('school');
+            if (!this.schoolList.includes(this.storage.getLocalEntry('school'))) {
+              this.storage.deleteLocalEntry('school');
               this.openSchoolSelector();
             }
           } else {
@@ -65,7 +69,7 @@ export class SchoolManagementComponent implements OnInit {
             this.schoolList = filteredSchools.map(school => school.name);
             this.storage.setSessionEntry('schoolList', this.schoolList);
 
-            if (!this.schoolList.includes(this.storage.getSessionEntry('school'))) {
+            if (!this.schoolList.includes(this.storage.getLocalEntry('school'))) {
               this.storage.deleteSessionEntry('school');
               this.openSchoolSelector();
             }
@@ -78,7 +82,7 @@ export class SchoolManagementComponent implements OnInit {
     }
 
 		this.event.schoolChange$.subscribe((school) => {
-			this.storage.setSessionEntry('school', school);
+			this.storage.setLocalEntry('school', school);
 		});
 	}
 
@@ -106,7 +110,6 @@ export class SchoolManagementComponent implements OnInit {
 		this.school = school.value;
 		this.event.schoolChange$.next(school.value);
 		this.event.resetForm$.next();
-    this.storage.setSessionEntry('school', school.value);
 	}
 
 	public hasSchool(): boolean {
