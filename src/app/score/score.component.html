@@ -22,6 +22,7 @@
         <th>Note</th>
         <th>Klausur</th>
         <th>Schüler</th>
+        <th>Aktionen</th>
       </tr>
     </thead>
     <tbody>
@@ -29,8 +30,8 @@
         <td>{{ score.points }}</td>
         <td>{{ score.comment }}</td>
         <td>{{ score.grade_id }} </td>
-        <td>{{ score.exam_id }}</td>
-        <td>{{ score.student_id }}</td>
+        <td>{{ score.examName || score.exam_id }}</td>
+        <td>{{ score.studentName || score.student_id }}</td>
         <td>
           <button (click)="editScore(score)">Bearbeiten</button>
           <button (click)="deleteScore(score.ID)">Löschen</button>

@@ -10,4 +10,5 @@ nachname: string;
 date_of_birth: string;
 class_id: number;
 address: SchoolAddressData;
+className?: string;
 }

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { StorageService } from '../services/storage.service';
 import { ExamData } from '../interfaces/exam-data.interface';
+import { ExamType } from '../enums/exam-type-enum';
 
 @Component({
   selector: 'app-exam',
@@ -13,6 +14,11 @@ import { ExamData } from '../interfaces/exam-data.interface';
   styleUrl: './exam.component.scss'
 })
 export class ExamComponent implements OnInit {
+  examTypes = [
+    {ID: 1, name: 'Schriftlich'},
+    {ID: 2, name: 'Mündlich'},
+    {ID: 3, name: 'Sonstige'}
+  ]
   exams: Array<ExamData> = [];
   createExamForm: FormGroup;
   editingExam: ExamData | null = null;
@@ -57,6 +63,8 @@ export class ExamComponent implements OnInit {
   }
 
   createExam() {
+    const formValue = this.createExamForm.value;
+    formValue.exam_type_id = Number(formValue.exam_type_id);
     const isAdmin = this.storage.getSessionEntry('is_admin');
       if(this.createExamForm.valid) {
         if(this.editingExam) {
@@ -107,6 +115,10 @@ export class ExamComponent implements OnInit {
         })
       }
     })
+  }
+
+  getExamType(examTypeId: number): string {
+    return ExamType[examTypeId];
   }
 
   numberValidator(control: FormControl): {[key: string]: any} | null {

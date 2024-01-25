@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SchoolStudentData } from '../interfaces/school-student-data.interface';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { StorageService } from '../services/storage.service';
+import { SchoolClassService } from '../services/school-class.service';
 
 @Component({
   selector: 'app-student-list',
@@ -17,7 +18,7 @@ export class StudentListComponent implements OnInit {
   createStudentForm: FormGroup;
   editingStudent: SchoolStudentData | null = null;
   showCreateStudentForm: boolean = false;
-  constructor(private studentService: StudentService, private storage: StorageService, private formBuilder: FormBuilder) {
+  constructor(private studentService: StudentService, private storage: StorageService, private formBuilder: FormBuilder, private schoolClassService: SchoolClassService) {
     this.createStudentForm = this.formBuilder.group({
       vorname: ['', Validators.required],
       nachname: ['', Validators.required],
@@ -34,6 +35,11 @@ export class StudentListComponent implements OnInit {
 
   ngOnInit() {
     this.studentService.getAllStudents().subscribe((studentsArray) => {
+      studentsArray.forEach(student => {
+        this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+          student.className = schoolClass.name;
+        })
+      })
       this.students = studentsArray; // Direkte Zuweisung des Antwort-Arrays
     });
 }
@@ -80,12 +86,22 @@ openCreateStudentForm() {
         this.studentService.editStudent(this.editingStudent.ID, this.createStudentForm.value).subscribe(()=>{
           if(isAdmin === true) {
             this.studentService.getAllStudents().subscribe((studentsArray) => {
+              studentsArray.forEach(student => {
+                this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+                  student.className = schoolClass.name;
+                })
+              })
               this.students = studentsArray;
             })
           }
           if(isAdmin === false) {
             // TODO Implement non-Admin case
             this.studentService.getAllStudents().subscribe((studentsArray) => {
+              studentsArray.forEach(student => {
+                this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+                  student.className = schoolClass.name;
+                })
+              })
               this.students = studentsArray;
             })
           }
@@ -94,12 +110,22 @@ openCreateStudentForm() {
         this.studentService.createStudent(this.createStudentForm.value).subscribe(() => {
           if(isAdmin === true) {
             this.studentService.getAllStudents().subscribe((studentsArray) => {
+              studentsArray.forEach(student => {
+                this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+                  student.className = schoolClass.name;
+                })
+              })
               this.students = studentsArray;
             })
           }
           if(isAdmin === false) {
             // TODO Implement non Admin-case
             this.studentService.getAllStudents().subscribe((studentsArray) => {
+              studentsArray.forEach(student => {
+                this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+                  student.className = schoolClass.name;
+                })
+              })
               this.students = studentsArray;
             })
           }
@@ -114,12 +140,22 @@ openCreateStudentForm() {
     this.studentService.deleteStudent(studentId).subscribe(() => {
       if(isAdmin === true) {
         this.studentService.getAllStudents().subscribe((studentsArray) => {
+          studentsArray.forEach(student => {
+            this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+              student.className = schoolClass.name;
+            })
+          })
           this.students = studentsArray;
         })
       }
       if(isAdmin === false) {
         // TODO Implement non-Admin case
         this.studentService.getAllStudents().subscribe((studentsArray) => {
+          studentsArray.forEach(student => {
+            this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+              student.className = schoolClass.name;
+            })
+          })
           this.students = studentsArray;
         })
       }

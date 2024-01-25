@@ -47,6 +47,17 @@ export class SchoolClassService {
       return this.http.get<ClassListData[]>(url);
     }
   }
+
+  getClassById(classId: number): Observable<ClassListData> {
+    const headers = this.getAuthorizationHeader();
+    const url = `${this.SchoolClassesUrl}/${classId}`
+    if (headers) {
+      return this.http.get<ClassListData>(url, { headers });
+    } else {
+      return this.http.get<ClassListData>(url);
+    }
+  }
+
   createSchoolClass(schoolClassBody: createSchoolClassDTO): Observable<any> {
     const headers = this.getAuthorizationHeader();
     return this.http.post(this.SchoolClassesUrl, schoolClassBody, {headers});

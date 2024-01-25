@@ -25,8 +25,7 @@
         <th>Name</th>
         <th>Addresse</th>
         <th>Geburtstag</th>
-        <th>Klassen-ID</th>
-        <th>Eintragung</th>
+        <th>Klasse</th>
         <th>Aktionen</th>
       </tr>
     </thead>
@@ -36,8 +35,7 @@
         <td>{{ student.nachname }} {{student.vorname}}</td>
         <td>{{ student.address.postal }} {{ student.address.city}}, {{student.address.street}} {{student.address.number}}</td>
         <td>{{ student.date_of_birth }}</td>
-        <td>{{ student.class_id }}</td>
-        <td>{{ student.CreatedAt }}</td>
+        <td>{{ student.className }}</td>
         <td>
           <button (click)="editStudent(student)">Bearbeiten</button>
           <button (click)="deleteStudent(student.ID)">Löschen</button>

@@ -4,6 +4,8 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { ScoreService } from '../services/score.service';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../services/storage.service';
+import { ExamService } from '../services/exam.service';
+import { StudentService } from '../services/student.service';
 
 @Component({
   selector: 'app-score',
@@ -17,7 +19,7 @@ export class ScoreComponent implements OnInit {
   createScoreForm: FormGroup;
   editingScore: ScoreData | null = null;
   showCreateScoreForm: boolean = false;
-  constructor(private scoreService: ScoreService, private storage: StorageService, private formBuilder: FormBuilder) {
+  constructor(private scoreService: ScoreService, private storage: StorageService, private formBuilder: FormBuilder, private examService: ExamService, private studentService:StudentService) {
     this.createScoreForm = this.formBuilder.group({
       points: ['', Validators.required],
       comment: ['', Validators.required],
@@ -28,6 +30,14 @@ export class ScoreComponent implements OnInit {
   }
   ngOnInit(): void {
     this.scoreService.getAllScores().subscribe((scoreArray) => {
+      scoreArray.forEach(score => {
+        this.examService.getExamById(score.exam_id).subscribe(exam => {
+          score.examName = exam.name;
+        });
+        this.studentService.getStudentById(score.student_id).subscribe(student => {
+          score.studentName = student.vorname + ' ' +student.nachname;
+        });
+      });
       this.scores = scoreArray;
     });
   }
@@ -63,12 +73,28 @@ export class ScoreComponent implements OnInit {
           this.scoreService.editScore(this.editingScore.ID, this.createScoreForm.value).subscribe(() => {
             if(isAdmin === true) {
               this.scoreService.getAllScores().subscribe((scoresArray) => {
+                scoresArray.forEach(score => {
+                  this.examService.getExamById(score.exam_id).subscribe(exam => {
+                    score.examName = exam.name;
+                  });
+                  this.studentService.getStudentById(score.student_id).subscribe(student => {
+                    score.studentName = student.vorname + ' ' +student.nachname;
+                  });
+                });
                 this.scores = scoresArray;
               })
             }
             if(isAdmin === false) {
               // TODO Implement non Admin-case
               this.scoreService.getAllScores().subscribe((scoresArray) => {
+                scoresArray.forEach(score => {
+                  this.examService.getExamById(score.exam_id).subscribe(exam => {
+                    score.examName = exam.name;
+                  });
+                  this.studentService.getStudentById(score.student_id).subscribe(student => {
+                    score.studentName = student.vorname + ' ' +student.nachname;
+                  });
+                });
                 this.scores = scoresArray;
               })
             }
@@ -77,12 +103,28 @@ export class ScoreComponent implements OnInit {
           this.scoreService.createScore(this.createScoreForm.value).subscribe(() => {
             if(isAdmin === true) {
               this.scoreService.getAllScores().subscribe((scoresArray) => {
+                scoresArray.forEach(score => {
+                  this.examService.getExamById(score.exam_id).subscribe(exam => {
+                    score.examName = exam.name;
+                  });
+                  this.studentService.getStudentById(score.student_id).subscribe(student => {
+                    score.studentName = student.vorname + ' ' +student.nachname;
+                  });
+                });
                 this.scores = scoresArray;
               })
             }
             if(isAdmin === false) {
               // TODO Implement non Admin-case
               this.scoreService.getAllScores().subscribe((scoresArray) => {
+                scoresArray.forEach(score => {
+                  this.examService.getExamById(score.exam_id).subscribe(exam => {
+                    score.examName = exam.name;
+                  });
+                  this.studentService.getStudentById(score.student_id).subscribe(student => {
+                    score.studentName = student.vorname + ' ' +student.nachname;
+                  });
+                });
                 this.scores = scoresArray;
               })
             }
@@ -97,12 +139,28 @@ export class ScoreComponent implements OnInit {
     this.scoreService.deleteScore(scoreId).subscribe(() => {
       if(isAdmin === true) {
         this.scoreService.getAllScores().subscribe((scoresArray) => {
+          scoresArray.forEach(score => {
+            this.examService.getExamById(score.exam_id).subscribe(exam => {
+              score.examName = exam.name;
+            });
+            this.studentService.getStudentById(score.student_id).subscribe(student => {
+              score.studentName = student.vorname + ' ' +student.nachname;
+            });
+          });
           this.scores = scoresArray;
         })
       }
       // TODO Implement non Admin-case
       if(isAdmin === false) {
         this.scoreService.getAllScores().subscribe((scoresArray) => {
+          scoresArray.forEach(score => {
+            this.examService.getExamById(score.exam_id).subscribe(exam => {
+              score.examName = exam.name;
+            });
+            this.studentService.getStudentById(score.student_id).subscribe(student => {
+              score.studentName = student.vorname + ' ' +student.nachname;
+            });
+          });
           this.scores = scoresArray;
         })
       }

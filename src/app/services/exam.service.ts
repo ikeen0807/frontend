@@ -30,6 +30,15 @@ export class ExamService {
       return this.http.get<ExamData[]>(this.examsUrl);
     }
   }
+
+  getExamById(examId: number): Observable<ExamData> {
+    const headers = this.getAuthorizationHeader();
+    if(headers) {
+      return this.http.get<ExamData>(this.examsUrl + '/' + examId, { headers });
+    } else {
+      return this.http.get<ExamData>(this.examsUrl);
+    }
+  }
   createExam(examBody: CreateExamDTO): Observable<any> {
     const headers = this.getAuthorizationHeader();
     return this.http.post(this.examsUrl, examBody, {headers});

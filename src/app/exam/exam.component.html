@@ -8,7 +8,10 @@
       <input type="date" formControlName="date" placeholder="Datum" required>
       <input type="number" formControlName="max_points" placeholder="Max. Punkte" required>
       <input type="text" formControlName="description" placeholder="Beschreibung" required>
-      <input type="number" formControlName="exam_type_id" placeholder="Testart" required>
+      <!-- <input type="number" formControlName="exam_type_id" placeholder="Testart" required> -->
+      <select formControlName="exam_type_id" required>
+        <option type="number" *ngFor="let type of examTypes" [value]="type.ID"> {{ type.name }} </option>
+      </select>
 
       <button type="submit">{{ editingExam ? 'Test aktualisieren' : 'Test erstellen' }}</button>
     </form>
@@ -22,6 +25,7 @@
         <th>Max. Punkte</th>
         <th>Beschreibung</th>
         <th>Testart</th>
+        <th>Aktionen</th>
       </tr>
     </thead>
     <tbody>
@@ -30,7 +34,7 @@
         <td>{{ exam.date }}</td>
         <td>{{ exam.max_points }} </td>
         <td>{{ exam.description }}</td>
-        <td>{{ exam.exam_type_id }}</td>
+        <td>{{ getExamType(exam.exam_type_id) }}</td>
         <td>
           <button (click)="editExam(exam)">Bearbeiten</button>
           <button (click)="deleteExam(exam.ID)">Löschen</button>
