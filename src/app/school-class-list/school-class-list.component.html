@@ -1,5 +1,6 @@
 <div class="school-class-list">
   <h2>Klassenliste</h2>
+  @if(!showStudentOverview) {
   <button (click)="openCreateClassForm()" class="create-class-btn">Klasse anlegen</button>
   @if(showCreateClassForm) {
   <div>
@@ -16,26 +17,54 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Aktiv</th>
+      <th>Klasse</th>
+      <th>Status</th>
       <th>Jahr</th>
-      <th>Schul-ID</th>
-      <th>Lehrer-ID</th>
+      <th>Schule</th>
+      <th>Klassenlehrer</th>
       <th>Aktionen</th>
     </tr>
+    <!-- Kopfzeile -->
   </thead>
   <tbody>
-    <tr *ngFor="let class of classes">
+    <ng-container *ngFor="let class of classes">
+    <tr>
+      <!-- Bestehende Zellen für Klasse-Details -->
       <td>{{ class.name }}</td>
       <td>{{ class.is_active ? 'Ja' : 'Nein' }}</td>
       <td>{{ class.year }}</td>
-      <td>{{ class.school_id }}</td>
-      <td>{{ class.teacher_id }}</td>
+      <td>{{ class.schoolName }}</td>
+      <td>{{ class.teacherName }}</td>
       <td>
         <button (click)="editClass(class)">Bearbeiten</button>
         <button (click)="deleteClass(class.ID)">Löschen</button>
+        <button (click)="toggleStudentsDisplay(class)">Alle Schüler anzeigen</button>
       </td>
     </tr>
+    <tr *ngIf="class === selectedClass">
+      <td colspan="7"> <!-- Achten Sie darauf, dass colspan der Anzahl der Spalten Ihrer Tabelle entspricht -->
+        <table>
+          <thead>
+            <tr>
+              <th>Vorname</th>
+              <th>Nachname</th>
+              <th>Geburtstag</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let student of class.students">
+            <td>{{ student.vorname }} </td>
+            <td>{{ student.nachname }} </td>
+            <td>{{ student.date_of_birth }}</td>
+            <td><button (click)="openStudentOverview()">Schüler anzeigen</button></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </ng-container>
   </tbody>
 </table>
-</div>
+}
+@if(showStudentOverview) {
+
+}

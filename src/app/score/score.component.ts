@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { StorageService } from '../services/storage.service';
 import { ExamService } from '../services/exam.service';
 import { StudentService } from '../services/student.service';
+import { ExamData } from '../interfaces/exam-data.interface';
+import { SchoolStudentData } from '../interfaces/school-student-data.interface';
 
 @Component({
   selector: 'app-score',
@@ -19,6 +21,8 @@ export class ScoreComponent implements OnInit {
   createScoreForm: FormGroup;
   editingScore: ScoreData | null = null;
   showCreateScoreForm: boolean = false;
+  exams: Array<ExamData> = [];
+  students: Array<SchoolStudentData> = [];
   constructor(private scoreService: ScoreService, private storage: StorageService, private formBuilder: FormBuilder, private examService: ExamService, private studentService:StudentService) {
     this.createScoreForm = this.formBuilder.group({
       points: ['', Validators.required],
@@ -40,6 +44,12 @@ export class ScoreComponent implements OnInit {
       });
       this.scores = scoreArray;
     });
+    this.examService.getAllExamsArray().subscribe((examArray) => {
+      this.exams = examArray;
+    })
+    this.studentService.getAllStudents().subscribe((studentArray) => {
+      this.students = studentArray;
+    })
   }
 
   openCreateScoreForm() {

@@ -5,10 +5,12 @@ export interface ClassListData {
   CreatedAt: Date;
   UpdatedAt: Date;
   DeletedAt: Date;
-  name: string;
+  name?: string;
   is_active: true;
   year: string;
   school_id: number;
   teacher_id: number;
   students: Array<SchoolStudentData>
+  teacherName?: string;
+  schoolName?: string;
 }

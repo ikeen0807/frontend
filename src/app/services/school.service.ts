@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { GetSchoolListResponseDTO } from '../model/getSchoolListResponseDTO';
 import { AuthService } from './auth.service';
 import { StorageService } from './storage.service';
+import { SchoolListData } from '../interfaces/schoolList-data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +28,11 @@ export class SchoolService {
     } else {
       return this.http.get<GetSchoolListResponseDTO[]>(this.getAllSchoolsUrl);
     }
+  }
+
+  getSchoolById(id: number): Observable<SchoolListData> {
+    const header = this.getAuthorizationHeader();
+    const url = `${this.getAllSchoolsUrl}/${id}`;
+    return this.http.get<SchoolListData>(url, {headers: header})
   }
 }

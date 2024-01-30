@@ -5,6 +5,8 @@ import { ClassListData } from '../interfaces/class-list-data.interface';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StorageService } from '../services/storage.service';
+import { TeacherService } from '../services/teacher.service';
+import { SchoolService } from '../services/school.service';
 
 
 @Component({
@@ -19,8 +21,10 @@ export class SchoolClassListComponent implements OnInit {
   createClassForm: FormGroup;
   editingClass: ClassListData | null = null;
   showCreateClassForm: boolean = false;
+  selectedClass: ClassListData | null = null;
+  showStudentOverview: boolean = false;
 
-  constructor(private schoolClassService: SchoolClassService, private fb: FormBuilder, private storage: StorageService) {
+  constructor(private school: SchoolService, private schoolClassService: SchoolClassService, private fb: FormBuilder, private storage: StorageService, private teacher: TeacherService) {
     this.createClassForm = this.fb.group({
       name: ['', Validators.required],
       is_active: [false],
@@ -33,10 +37,27 @@ export class SchoolClassListComponent implements OnInit {
   ngOnInit() {
     if(this.storage.getSessionEntry('is_admin') === true) {
     this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
+      classesArray.forEach(schoolClass => {
+        this.teacher.getOneTeacherById(schoolClass.teacher_id).subscribe(teacherData => {
+          const teacherFullname = `${teacherData.vorname} ${teacherData.nachname}`;
+          schoolClass.teacherName = teacherFullname;
+        })
+      })
       this.classes = classesArray;
     });
     } else {
       this.schoolClassService.getAllSchoolClassesArrayById(this.storage.getSessionEntry('school_id')).subscribe((classesArray) =>{
+        classesArray.forEach(schoolClass => {
+          this.teacher.getOneTeacherById(schoolClass.teacher_id).subscribe(teacherData => {
+            const teacherFullname = `${teacherData.vorname} ${teacherData.nachname}`;
+            schoolClass.teacherName = teacherFullname;
+          })
+        })
+        classesArray.forEach(schoolClass => {
+          this.school.getSchoolById(schoolClass.school_id).subscribe(schoolData => {
+            schoolClass.schoolName =  schoolData.name;
+          })
+        })
         this.classes = classesArray;
       })
     }
@@ -52,6 +73,14 @@ export class SchoolClassListComponent implements OnInit {
       school_id: '',
       teacher_id: ''
     });
+  }
+
+  openStudentOverview() {
+    this.showStudentOverview = true;
+  }
+
+  toggleStudentsDisplay(selectedClass: ClassListData): void {
+    this.selectedClass = this.selectedClass === selectedClass ? null : selectedClass;
   }
 
   editClass(classData: ClassListData) {

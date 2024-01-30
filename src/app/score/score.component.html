@@ -4,16 +4,31 @@
   @if(showCreateScoreForm) {
   <div>
     <form [formGroup]="createScoreForm" (ngSubmit)="createScore()">
+      <label for="points">Punkte</label>
       <input type="number" formControlName="points" placeholder="Punkte" required>
+      <label for="comment">Kommentar</label>
       <input type="text" formControlName="comment" placeholder="Kommentar" required>
+      <label for="grade_id">Note</label>
       <input type="number" formControlName="grade_id" placeholder="Note" required>
-      <input type="number" formControlName="exam_id" placeholder="Klausur" required>
-      <input type="number" formControlName="student_id" placeholder="Schüler" required>
+      <label for="exam_id">Klausur</label>
+      <select type="number" formControlName="exam_id">
+        <option *ngFor="let exam of exams"
+        [ngValue]="exam.ID">
+        {{ exam.name }}
+      </option>
+      </select>
+      <label for="student_id">Schüler</label>
+      <select type="number" formControlName="student_id">
+        <option *ngFor="let student of students" [ngValue]="student.ID">
+        {{ student.vorname }} {{student.nachname}}
+        </option>
+      </select>
 
       <button type="submit">{{ editingScore ? 'Benotung aktualisieren' : 'Benotung übermitteln' }}</button>
     </form>
   </div>
 }
+@if(!showCreateScoreForm) {
   <table>
     <thead>
       <tr>
@@ -39,4 +54,5 @@
       </tr>
     </tbody>
   </table>
+}
 </div>
