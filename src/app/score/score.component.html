@@ -2,8 +2,16 @@
   <h2>Benotungen</h2>
   <button (click)="openCreateScoreForm()" class="create-score-btn">Benotung vornehmen</button>
   @if(showCreateScoreForm) {
-  <div>
-    <form [formGroup]="createScoreForm" (ngSubmit)="createScore()">
+    <div>
+      <form>
+        <label for="class_id"> Klasse </label>
+        <select (change)="onClassChange(14)">
+          <option value="">Bitte wählen...</option>
+          <option *ngFor="let class of classes" [value]="class.ID"> {{ class.name }}</option>
+        </select>
+      </form>
+      <!-- Ihr bestehendes Formular -->
+      <form [formGroup]="createScoreForm" (ngSubmit)="createScore()">
       <label for="exam_id">Klausur</label>
       <select type="number" formControlName="exam_id">
         <option *ngFor="let exam of exams"
@@ -13,8 +21,8 @@
       </select>
       <label for="student_id">Schüler</label>
       <select type="number" formControlName="student_id">
-        <option *ngFor="let student of students" [ngValue]="student.ID">
-        {{ student.vorname }} {{student.nachname}}
+        <option *ngFor="let student of filteredStudents" [ngValue]="student.ID">
+          {{ student.vorname }} {{ student.nachname }}
         </option>
       </select>
       <label for="points">Punkte</label>

@@ -46,6 +46,16 @@ export class StudentService {
     }
   }
 
+  getStudentByClass(classId: number): Observable<SchoolStudentData[]> {
+    const headers = this.getAuthorizationHeader();
+    const url = `${this.getAllStudentsUrl}/${classId}`
+    if (headers) {
+      return this.http.get<SchoolStudentData[]>(url, { headers });
+    } else {
+      return this.http.get<SchoolStudentData[]>(url);
+    }
+  }
+
   getStudentById(studentId: number): Observable<SchoolStudentData> {
     const headers = this.getAuthorizationHeader();
     const url = `${this.getAllStudentsUrl}/${studentId}`

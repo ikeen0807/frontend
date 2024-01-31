@@ -77,7 +77,7 @@ export class SchoolClassListComponent implements OnInit {
       name: '',
       is_active: false,
       year: '',
-      school_id: '',
+      school_id: this.storage.getSessionEntry('school_id'),
       teacher_id: ''
     });
   }
@@ -114,7 +114,7 @@ export class SchoolClassListComponent implements OnInit {
       name: classData.name,
       is_active: classData.is_active,
       year: classData.year,
-      school_id: classData.school_id,
+      school_id: this.storage.getSessionEntry('school_id'),
       teacher_id: classData.teacher_id
     });
   }

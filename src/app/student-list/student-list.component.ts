@@ -18,6 +18,7 @@ export class StudentListComponent implements OnInit {
   createStudentForm: FormGroup;
   editingStudent: SchoolStudentData | null = null;
   showCreateStudentForm: boolean = false;
+  isAdminGlobal: boolean = this.storage.getSessionEntry('is_admin');
   constructor(private studentService: StudentService, private storage: StorageService, private formBuilder: FormBuilder, private schoolClassService: SchoolClassService) {
     this.createStudentForm = this.formBuilder.group({
       vorname: ['', Validators.required],
@@ -34,6 +35,17 @@ export class StudentListComponent implements OnInit {
   }
 
   ngOnInit() {
+    const isAdmin = this.storage.getSessionEntry('is_admin');
+    if(isAdmin === false) {
+    this.studentService.getStudentByClass(this.storage.getSessionEntry('class_id')).subscribe((studentsArray) => {
+      studentsArray.forEach(student => {
+        this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+          student.className = schoolClass.name;
+        })
+      })
+      this.students = studentsArray; // Direkte Zuweisung des Antwort-Arrays
+    });
+  } else {
     this.studentService.getAllStudents().subscribe((studentsArray) => {
       studentsArray.forEach(student => {
         this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
@@ -42,11 +54,14 @@ export class StudentListComponent implements OnInit {
       })
       this.students = studentsArray; // Direkte Zuweisung des Antwort-Arrays
     });
+  }
 }
 
 openCreateStudentForm() {
+  const isAdmin = this.storage.getSessionEntry('is_admin');
   this.editingStudent = null;
   this.showCreateStudentForm = true;
+  if(isAdmin === true) {
   this.createStudentForm.reset({
     vorname:'',
     nachname: '',
@@ -57,14 +72,30 @@ openCreateStudentForm() {
     city: '',
     },
     date_of_birth: '',
-    class_id: '',
+    class_id: ''
   })
+ } else {
+  this.createStudentForm.reset({
+    vorname:'',
+    nachname: '',
+    address: {
+    street: '',
+    number: '',
+    postal: '',
+    city: '',
+    },
+    date_of_birth: '',
+    class_id: this.storage.getSessionEntry('class_id')
+  })
+ }
 }
 
 
   editStudent(studentData: SchoolStudentData) {
+    const isAdmin = this.storage.getSessionEntry('is_admin');
    this.showCreateStudentForm = true;
    this.editingStudent = studentData;
+   if(isAdmin === true) {
    this.createStudentForm.setValue({
     vorname: studentData.vorname,
     nachname: studentData.nachname,
@@ -77,6 +108,20 @@ openCreateStudentForm() {
     date_of_birth: studentData.date_of_birth,
     class_id: studentData.class_id
    })
+  } else {
+    this.createStudentForm.setValue({
+      vorname: studentData.vorname,
+      nachname: studentData.nachname,
+      address: {
+      street: studentData.address.street,
+      number: studentData.address.number,
+      postal: studentData.address.postal,
+      city: studentData.address.city,
+      },
+      date_of_birth: studentData.date_of_birth,
+      class_id: this.storage.getSessionEntry('class_id')
+     })
+  }
   }
 
   createStudent() {

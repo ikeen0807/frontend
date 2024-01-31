@@ -1,5 +1,5 @@
 <div class="school-class-list">
-  <h2>Klassenliste</h2>
+  <h2>Schülerliste</h2>
   <button (click)="openCreateStudentForm()" class="create-student-btn">Schüler anlegen</button>
   @if(showCreateStudentForm) {
   <div>
@@ -7,7 +7,9 @@
       <input formControlName="vorname" placeholder="Vorname" required>
       <input formControlName="nachname" placeholder="Nachname" required>
       <input formControlName="date_of_birth" placeholder="Geburtstag" required>
+      @if(isAdminGlobal === true) {
       <input type="number" formControlName="class_id" placeholder="Klassen-ID" required>
+       }
       <div formGroupName="address">
         <input formControlName="street" placeholder="Straße" required>
         <input formControlName="number" placeholder="Hausnummer" required>

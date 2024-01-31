@@ -8,6 +8,9 @@ import { ExamService } from '../services/exam.service';
 import { StudentService } from '../services/student.service';
 import { ExamData } from '../interfaces/exam-data.interface';
 import { SchoolStudentData } from '../interfaces/school-student-data.interface';
+import { SchoolClassService } from '../services/school-class.service';
+import { GetClassListResponseDTO } from '../model/getClassesListResponseDTO';
+import { ClassListData } from '../interfaces/class-list-data.interface';
 
 @Component({
   selector: 'app-score',
@@ -23,7 +26,10 @@ export class ScoreComponent implements OnInit {
   showCreateScoreForm: boolean = false;
   exams: Array<ExamData> = [];
   students: Array<SchoolStudentData> = [];
-  constructor(private scoreService: ScoreService, private storage: StorageService, private formBuilder: FormBuilder, private examService: ExamService, private studentService:StudentService) {
+  classes: Array<ClassListData> = [];
+  selectedClassId: number | null = null;
+  filteredStudents: SchoolStudentData[] = [];
+  constructor(private schoolClass: SchoolClassService, private scoreService: ScoreService, private storage: StorageService, private formBuilder: FormBuilder, private examService: ExamService, private studentService:StudentService) {
     this.createScoreForm = this.formBuilder.group({
       points: ['', Validators.required],
       comment: ['', Validators.required],
@@ -49,7 +55,21 @@ export class ScoreComponent implements OnInit {
     })
     this.studentService.getAllStudents().subscribe((studentArray) => {
       this.students = studentArray;
+      console.log(this.students)
     })
+    this.schoolClass.getAllSchoolClassesArray().subscribe((classesArray) => {
+      this.classes = classesArray;
+    })
+  }
+
+  onClassChange(classId: number) {
+    if (classId) {
+      this.selectedClassId = classId;
+      this.filteredStudents = this.students.filter(student => student.class_id === classId);
+    } else {
+      this.selectedClassId = null;
+      this.filteredStudents = [];
+    }
   }
 
   openCreateScoreForm() {
