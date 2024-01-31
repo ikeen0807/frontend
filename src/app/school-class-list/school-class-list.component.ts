@@ -7,6 +7,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StorageService } from '../services/storage.service';
 import { TeacherService } from '../services/teacher.service';
 import { SchoolService } from '../services/school.service';
+import { StudentService } from '../services/student.service';
+import { SchoolStudentData } from '../interfaces/school-student-data.interface';
+import { ScoreService } from '../services/score.service';
+import { ScoreData } from '../interfaces/score-data.interface';
+import { ExamService } from '../services/exam.service';
 
 
 @Component({
@@ -18,13 +23,15 @@ import { SchoolService } from '../services/school.service';
 })
 export class SchoolClassListComponent implements OnInit {
   classes: Array<ClassListData> = [];
+  filteredScores: Array<ScoreData> = [];
   createClassForm: FormGroup;
   editingClass: ClassListData | null = null;
   showCreateClassForm: boolean = false;
   selectedClass: ClassListData | null = null;
   showStudentOverview: boolean = false;
+  studentData: SchoolStudentData | null = null;
 
-  constructor(private school: SchoolService, private schoolClassService: SchoolClassService, private fb: FormBuilder, private storage: StorageService, private teacher: TeacherService) {
+  constructor(private exam: ExamService, private score: ScoreService, private student: StudentService, private school: SchoolService, private schoolClassService: SchoolClassService, private fb: FormBuilder, private storage: StorageService, private teacher: TeacherService) {
     this.createClassForm = this.fb.group({
       name: ['', Validators.required],
       is_active: [false],
@@ -75,8 +82,25 @@ export class SchoolClassListComponent implements OnInit {
     });
   }
 
-  openStudentOverview() {
+  openStudentOverview(studentId: number) {
     this.showStudentOverview = true;
+    this.student.getStudentById(studentId).subscribe((student) => {
+      this.studentData = student;
+      if(this.studentData !== null && this.studentData !== undefined) {
+      this.schoolClassService.getClassById(student.class_id).subscribe((schoolClass) => {
+        this.studentData!.className = schoolClass.name;
+      })
+    }
+    })
+     // Abfrage aller Scores und Filterung nach der studentId
+  this.score.getAllScores().subscribe((allScores) => {
+    this.filteredScores = allScores.filter(score => score.student_id === studentId);
+    this.filteredScores.forEach(score => {
+      this.exam.getExamById(score.exam_id).subscribe(exam => {
+        score.examName = exam.name;
+      });
+    })
+  });
   }
 
   toggleStudentsDisplay(selectedClass: ClassListData): void {

@@ -1,3 +1,4 @@
+import { ExamData } from "./exam-data.interface";
 import { SchoolAddressData } from "./school-address-data.interface";
 
 export interface SchoolStudentData {
@@ -11,4 +12,5 @@ date_of_birth: string;
 class_id: number;
 address: SchoolAddressData;
 className?: string;
+exams?: ExamData;
 }

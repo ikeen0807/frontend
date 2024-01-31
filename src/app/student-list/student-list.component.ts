@@ -22,7 +22,7 @@ export class StudentListComponent implements OnInit {
     this.createStudentForm = this.formBuilder.group({
       vorname: ['', Validators.required],
       nachname: ['', Validators.required],
-      address: this.formBuilder.group({ // Änderung hier: Erstellen einer Untergruppe für die Adresse
+      address: this.formBuilder.group({
         street: ['', Validators.required],
         number: ['', Validators.required],
         postal: ['', Validators.required],

@@ -56,7 +56,7 @@
             <td>{{ student.vorname }} </td>
             <td>{{ student.nachname }} </td>
             <td>{{ student.date_of_birth }}</td>
-            <td><button (click)="openStudentOverview()">Schüler anzeigen</button></td>
+            <td><button (click)="openStudentOverview(student.ID)">Schüler anzeigen</button></td>
           </tr>
         </table>
       </td>
@@ -66,5 +66,44 @@
 </table>
 }
 @if(showStudentOverview) {
-
+  <div class="studentContainer">
+  <table class="studentTable">
+    <thead class="studentThead">
+      <tr class="studentTr">
+        <th class="studentTh">Name</th>
+        <th class="studentTh">Klasse</th>
+        <th class="studentTh">Geburtstag</th>
+        <th class="studentTh">Addresse</th>
+        <th class="studentTh">Aktionen</th>
+      </tr>
+    </thead>
+    <tbody class="studentTbody">
+      <tr class="studentTr">
+        <td class="studentTd">{{ studentData?.vorname }} {{studentData?.nachname}}</td>
+        <td class="studentTd">{{ studentData?.className }}</td>
+        <td class="studentTd">{{ studentData?.date_of_birth }} </td>
+        <td class="studentTd">{{ studentData?.address?.postal }} {{ studentData?.address?.city}}, {{studentData?.address?.street}} {{studentData?.address?.number}}</td>
+        <td class="studentTd"><button> Benotung vornehmen </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h2 class="score-header"> Benotungen des Schülers</h2>
+  <table>
+    <thead class="studentThead">
+      <tr class="studentTr">
+        <th class="studentTh">Klausur</th>
+        <th class="studentTh">Kommentar</th>
+        <th class="studentTh">Punkte</th>
+      </tr>
+    </thead>
+    <tbody class="studentTbody">
+      <tr *ngFor="let score of filteredScores" class="studentTr">
+        <td class="studentTd">{{ score.examName}}</td>
+        <td class="studentTd">{{ score.comment }}</td>
+        <td class="studentTd">{{ score.points }} </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 }

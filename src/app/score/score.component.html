@@ -4,12 +4,6 @@
   @if(showCreateScoreForm) {
   <div>
     <form [formGroup]="createScoreForm" (ngSubmit)="createScore()">
-      <label for="points">Punkte</label>
-      <input type="number" formControlName="points" placeholder="Punkte" required>
-      <label for="comment">Kommentar</label>
-      <input type="text" formControlName="comment" placeholder="Kommentar" required>
-      <label for="grade_id">Note</label>
-      <input type="number" formControlName="grade_id" placeholder="Note" required>
       <label for="exam_id">Klausur</label>
       <select type="number" formControlName="exam_id">
         <option *ngFor="let exam of exams"
@@ -23,7 +17,12 @@
         {{ student.vorname }} {{student.nachname}}
         </option>
       </select>
-
+      <label for="points">Punkte</label>
+      <input type="number" formControlName="points" placeholder="Punkte" required>
+      <label for="comment">Kommentar</label>
+      <input type="text" formControlName="comment" placeholder="Kommentar" required>
+      <label for="grade_id">Note</label>
+      <input type="number" formControlName="grade_id" placeholder="Note" required>
       <button type="submit">{{ editingScore ? 'Benotung aktualisieren' : 'Benotung übermitteln' }}</button>
     </form>
   </div>
@@ -32,20 +31,20 @@
   <table>
     <thead>
       <tr>
+        <th>Klausur</th>
         <th>Punkte</th>
         <th>Kommentar</th>
         <th>Note</th>
-        <th>Klausur</th>
         <th>Schüler</th>
         <th>Aktionen</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let score of scores">
+        <td>{{ score.examName || score.exam_id }}</td>
         <td>{{ score.points }}</td>
         <td>{{ score.comment }}</td>
         <td>{{ score.grade_id }} </td>
-        <td>{{ score.examName || score.exam_id }}</td>
         <td>{{ score.studentName || score.student_id }}</td>
         <td>
           <button (click)="editScore(score)">Bearbeiten</button>
