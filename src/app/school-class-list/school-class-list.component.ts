@@ -30,14 +30,32 @@ export class SchoolClassListComponent implements OnInit {
   selectedClass: ClassListData | null = null;
   showStudentOverview: boolean = false;
   studentData: SchoolStudentData | null = null;
+  showCreateStudentForm: boolean = false;
+  isAdminGlobal: boolean = this.storage.getSessionEntry('is_admin');
+  createStudentForm: FormGroup;
+  editingStudent: SchoolStudentData | null = null;
+  students: Array<SchoolStudentData> = [];
+  showCreateScoreForm: boolean = false;
 
-  constructor(private exam: ExamService, private score: ScoreService, private student: StudentService, private school: SchoolService, private schoolClassService: SchoolClassService, private fb: FormBuilder, private storage: StorageService, private teacher: TeacherService) {
+  constructor(private exam: ExamService, private score: ScoreService, private studentService: StudentService, private school: SchoolService, private schoolClassService: SchoolClassService, private fb: FormBuilder, private storage: StorageService, private teacher: TeacherService) {
     this.createClassForm = this.fb.group({
       name: ['', Validators.required],
       is_active: [false],
       year: ['', Validators.required],
       school_id: ['', [Validators.required, this.numberValidator]],
       teacher_id: ['', [Validators.required, this.numberValidator]]
+    });
+    this.createStudentForm = this.fb.group({
+      vorname: ['', Validators.required],
+      nachname: ['', Validators.required],
+      address: this.fb.group({
+        street: ['', Validators.required],
+        number: ['', Validators.required],
+        postal: ['', Validators.required],
+        city: ['', Validators.required],
+      }),
+      date_of_birth: ['', Validators.required],
+      class_id: ['', [Validators.required, this.numberValidator]]
     });
    }
 
@@ -48,6 +66,11 @@ export class SchoolClassListComponent implements OnInit {
         this.teacher.getOneTeacherById(schoolClass.teacher_id).subscribe(teacherData => {
           const teacherFullname = `${teacherData.vorname} ${teacherData.nachname}`;
           schoolClass.teacherName = teacherFullname;
+        })
+      })
+      classesArray.forEach(schoolClass => {
+        this.school.getSchoolById(this.storage.getSessionEntry('school_id')).subscribe(schoolData => {
+          schoolClass.schoolName   = schoolData.name;
         })
       })
       this.classes = classesArray;
@@ -61,8 +84,8 @@ export class SchoolClassListComponent implements OnInit {
           })
         })
         classesArray.forEach(schoolClass => {
-          this.school.getSchoolById(schoolClass.school_id).subscribe(schoolData => {
-            schoolClass.schoolName =  schoolData.name;
+          this.school.getSchoolById(this.storage.getSessionEntry('school_id')).subscribe(schoolData => {
+            schoolClass.schoolName = schoolData.name;
           })
         })
         this.classes = classesArray;
@@ -84,7 +107,7 @@ export class SchoolClassListComponent implements OnInit {
 
   openStudentOverview(studentId: number) {
     this.showStudentOverview = true;
-    this.student.getStudentById(studentId).subscribe((student) => {
+    this.studentService.getStudentById(studentId).subscribe((student) => {
       this.studentData = student;
       if(this.studentData !== null && this.studentData !== undefined) {
       this.schoolClassService.getClassById(student.class_id).subscribe((schoolClass) => {
@@ -134,6 +157,7 @@ export class SchoolClassListComponent implements OnInit {
         this.schoolClassService.editSchoolClass(this.editingClass.ID, this.createClassForm.value).subscribe(() => {
           if(isAdmin === true) {
           this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
+            
             this.classes = classesArray;
           });
         }
@@ -144,7 +168,6 @@ export class SchoolClassListComponent implements OnInit {
           }
         });
       } else {
-        // Erstellungslogik
         console.log('Neue Klasse:', this.createClassForm.value);
         this.schoolClassService.createSchoolClass(this.createClassForm.value).subscribe(() => {
           if(isAdmin === true) {
@@ -162,6 +185,110 @@ export class SchoolClassListComponent implements OnInit {
       this.showCreateClassForm = false;
     }
   }
+
+  openCreateStudentForm(classID: number) {
+    this.editingStudent = null;
+    this.showCreateStudentForm = true;
+    this.createStudentForm.reset({
+      vorname:'',
+      nachname: '',
+      address: {
+      street: '',
+      number: '',
+      postal: '',
+      city: '',
+      },
+      date_of_birth: '',
+      class_id: classID || ''
+    })
+  }
+  
+  
+    editStudent(studentData: SchoolStudentData) {
+     this.showCreateStudentForm = true;
+     this.editingStudent = studentData;
+     this.createStudentForm.setValue({
+      vorname: studentData.vorname,
+      nachname: studentData.nachname,
+      address: {
+      street: studentData.address.street,
+      number: studentData.address.number,
+      postal: studentData.address.postal,
+      city: studentData.address.city,
+      },
+      date_of_birth: studentData.date_of_birth,
+      class_id: studentData.class_id
+     })
+    }
+  
+    createStudent() {
+      const isAdmin = this.storage.getSessionEntry('is_admin');
+      if(this.createStudentForm?.valid) {
+        if(this.editingStudent) {
+          this.studentService.editStudent(this.editingStudent.ID, this.createStudentForm.value).subscribe(() => {
+            this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
+              classesArray.forEach(schoolClass => {
+                this.teacher.getOneTeacherById(schoolClass.teacher_id).subscribe(teacherData => {
+                  const teacherFullname = `${teacherData.vorname} ${teacherData.nachname}`;
+                  schoolClass.teacherName = teacherFullname;
+                })
+              })
+              classesArray.forEach(schoolClass => {
+                this.school.getSchoolById(this.storage.getSessionEntry('school_id')).subscribe(schoolData => {
+                  schoolClass.schoolName   = schoolData.name;
+                })
+              })
+              this.classes = classesArray;
+            });
+          })
+        } else {
+          this.studentService.createStudent(this.createStudentForm.value).subscribe(() => {
+            this.schoolClassService.getAllSchoolClassesArray().subscribe((classesArray) => {
+              classesArray.forEach(schoolClass => {
+                this.teacher.getOneTeacherById(schoolClass.teacher_id).subscribe(teacherData => {
+                  const teacherFullname = `${teacherData.vorname} ${teacherData.nachname}`;
+                  schoolClass.teacherName = teacherFullname;
+                })
+              })
+              classesArray.forEach(schoolClass => {
+                this.school.getSchoolById(this.storage.getSessionEntry('school_id')).subscribe(schoolData => {
+                  schoolClass.schoolName   = schoolData.name;
+                })
+              })
+              this.classes = classesArray;
+            });
+          });
+        }
+        this.showCreateStudentForm = false;
+      }
+    }
+  
+    deleteStudent(studentId: number) {
+      const isAdmin = this.storage.getSessionEntry('is_admin');
+      this.studentService.deleteStudent(studentId).subscribe(() => {
+        if(isAdmin === true) {
+          this.studentService.getAllStudents().subscribe((studentsArray) => {
+            studentsArray.forEach(student => {
+              this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+                student.className = schoolClass.name;
+              })
+            })
+            this.students = studentsArray;
+          })
+        }
+        if(isAdmin === false) {
+          // TODO Implement non-Admin case
+          this.studentService.getAllStudents().subscribe((studentsArray) => {
+            studentsArray.forEach(student => {
+              this.schoolClassService.getClassById(student.class_id).subscribe(schoolClass => {
+                student.className = schoolClass.name;
+              })
+            })
+            this.students = studentsArray;
+          })
+        }
+      })
+    }
 
 
   deleteClass(classId: number) {

@@ -5,7 +5,7 @@
     <div>
       <form>
         <label for="class_id"> Klasse </label>
-        <select (change)="onClassChange(14)">
+        <select (change)="onClassChange(2)">
           <option value="">Bitte wählen...</option>
           <option *ngFor="let class of classes" [value]="class.ID"> {{ class.name }}</option>
         </select>

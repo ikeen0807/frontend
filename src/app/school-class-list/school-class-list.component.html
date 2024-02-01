@@ -1,6 +1,6 @@
 <div class="school-class-list">
   <h2>Klassenliste</h2>
-  @if(!showStudentOverview) {
+  @if(!showStudentOverview && !showCreateScoreForm) {
   <button (click)="openCreateClassForm()" class="create-class-btn">Klasse anlegen</button>
   @if(showCreateClassForm) {
   <div>
@@ -10,6 +10,22 @@
       <input formControlName="year" placeholder="Jahr" required>
       <input type="number" formControlName="teacher_id" placeholder="Lehrer-ID" required>
       <button type="submit">{{ editingClass ? 'Klasse aktualisieren' : 'Klasse erstellen' }}</button>
+    </form>
+  </div>
+}
+@if(showCreateStudentForm) {
+  <div>
+    <form [formGroup]="createStudentForm" (ngSubmit)="createStudent()">
+      <input formControlName="vorname" placeholder="Vorname" required>
+      <input formControlName="nachname" placeholder="Nachname" required>
+      <input formControlName="date_of_birth" placeholder="Geburtstag" required>
+      <div formGroupName="address">
+        <input formControlName="street" placeholder="Straße" required>
+        <input formControlName="number" placeholder="Hausnummer" required>
+        <input formControlName="postal" placeholder="Postleitzahl" required>
+        <input formControlName="city" placeholder="Stadt" required>
+      </div>
+      <button type="submit">{{ editingStudent ? 'Schüler aktualisieren' : 'Schüler erstellen' }}</button>
     </form>
   </div>
 }
@@ -38,6 +54,7 @@
         <button (click)="editClass(class)">Bearbeiten</button>
         <button (click)="deleteClass(class.ID)">Löschen</button>
         <button (click)="toggleStudentsDisplay(class)">Alle Schüler anzeigen</button>
+        <button (click)="openCreateStudentForm(class.ID)" class="create-student-btn">Schüler anlegen</button>
       </td>
     </tr>
     <tr *ngIf="class === selectedClass">

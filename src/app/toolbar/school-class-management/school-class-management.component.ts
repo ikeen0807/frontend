@@ -51,34 +51,33 @@ export class schoolClassManagementComponent implements OnInit {
             this.schoolClassList = schoolClasses.map(schoolClass => schoolClass.name);
 
             this.storage.setSessionEntry('schoolClassList', this.schoolClassList);
-
+          if(this.storage.getSessionEntry('schoolClassList')) {
             if (!this.schoolClassList.includes(this.storage.getLocalEntry('schoolClass'))) {
 
               this.storage.deleteLocalEntry('schoolClass');
               this.openSchoolClassSelector();
             }
           }
+          }
         });
       }
       if(this.storage.getSessionEntry('is_admin') === false) {
         this.schoolClassService.getAllSchoolClasses().subscribe((classes) => {
           if (classes && Array.isArray(classes)) {
-            // Filtern Sie Klassen basierend auf teacher_id und school_id
             const filteredClasses = classes.filter(schoolClass =>
               schoolClass.teacher_id === mockTeacherId);
 
-            // Extrahieren Sie nun die Namen der gefilterten Klassen
             this.schoolClassList = filteredClasses.map(schoolClass => schoolClass.name);
             console.log(this.schoolClass);
             this.storage.setSessionEntry('schoolClassList', this.schoolClassList);
-
+          if(!this.storage.getSessionEntry('schoolClassList')) {
             if (!this.schoolClassList.includes(this.storage.getLocalEntry('schoolClass'))) {
               this.storage.deleteSessionEntry('schoolClass');
               this.openSchoolClassSelector();
             }
+          }
           } else {
             console.error('Unerwartete Antwortstruktur:', classes);
-            // Geeignete Fehlerbehandlung
           }
         });
       }
